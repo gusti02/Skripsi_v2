@@ -3,7 +3,7 @@ import AuthLayouts from '../components/Layout/AuthLayouts';
 import FormLogin from '../components/Fragments/FormLogin';
 import FormRegister from '../components/Fragments/FormRegister';
 
-function LoginRegister() {
+function RegisterPage() {
   return (
     <AuthLayouts title="Register">
         <FormRegister/>
@@ -11,4 +11,4 @@ function LoginRegister() {
   )
 }
 
-export default LoginRegister;
+export default RegisterPage;
