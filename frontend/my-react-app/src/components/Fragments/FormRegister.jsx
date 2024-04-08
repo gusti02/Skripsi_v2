@@ -10,7 +10,7 @@ function FormRegister() {
         <InputForm name="email" type="email" placeholder="Example@mail.com" label="Email"/>
         <InputForm name="password" type="password" placeholder="********" label="Password"/>
         <InputForm name="confirmPassword" type="password" placeholder="********" label="Confirm Password"/>
-        <Button classname='bg-blue-600 w-full'>Register</Button>
+        <Button className='bg-blue-600 w-full'>Register</Button>
     </form>
   )
 }

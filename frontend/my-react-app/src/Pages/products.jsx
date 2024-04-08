@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import CardProducts from '../components/Fragments/CardProducts'
+import Button from '../components/Elements/Button'
 
 const products = [
     {
@@ -29,20 +30,38 @@ const products = [
     },
 ]
 
+{/* Get Email */}
+const email = localStorage.getItem('email')
+
+{/* Products Page */}
 function ProductsPage() {
+
+  {/* Handler Logout */}
+  const handleLogout = () => {
+      localStorage.removeItem('email')
+      localStorage.removeItem('password')
+      window.location.href = "/login"
+  }
+
   return (
-    <div className='flex justify-center py-5'>
-        {/* Card Products using rendering map list*/}
-        {products.map(product => (
-            <CardProducts key={product.id}>
-                <CardProducts.Header image={product.image}></CardProducts.Header>
-                <CardProducts.Body name={product.name}>
-                    {product.description}
-                </CardProducts.Body>
-                <CardProducts.Footer price={product.price}></CardProducts.Footer>
-            </CardProducts>
-        ))}
-    </div>
+    <Fragment>
+        <div className='flex justify-end h-20 bg-blue-600 text-white px-10 items-center'>
+            {email}
+            <Button className='bg-black ml-5' onClick={handleLogout}>Logout</Button>
+        </div>
+        <div className='flex justify-center py-5'>
+            {/* Card Products using rendering map list*/}
+            {products.map(product => (
+                <CardProducts key={product.id}>
+                    <CardProducts.Header image={product.image}></CardProducts.Header>
+                    <CardProducts.Body name={product.name}>
+                        {product.description}
+                    </CardProducts.Body>
+                    <CardProducts.Footer price={product.price}></CardProducts.Footer>
+                </CardProducts>
+            ))}
+        </div>
+    </Fragment>
   )
 }
 
