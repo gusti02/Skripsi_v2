@@ -1,34 +1,35 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import CardProducts from '../components/Fragments/CardProducts'
 import Button from '../components/Elements/Button'
+import { getProducts } from '../assets/services/product.service'
 
-const products = [
-    {
-        id: 1,
-        name: 'Sepatu Baru',
-        price: 1000000,
-        image: '/images/shoes1.jpg',
-        description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
-            Atque veritatis accusantium totam, hic iure sapiente 
-            expedita sunt nam a corrupti aut eius. Excepturi 
-            ab at debitis labore eius id nulla.`
-    },
-    {
-        id: 2,
-        name: 'Sepatu Lama',
-        price: 5000000,
-        image: '/images/shoes1.jpg',
-        description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit`
-    },
+// const products = [
+//     {
+//         id: 1,
+//         name: 'Sepatu Baru',
+//         price: 1000000,
+//         image: '/images/shoes1.jpg',
+//         description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
+//             Atque veritatis accusantium totam, hic iure sapiente 
+//             expedita sunt nam a corrupti aut eius. Excepturi 
+//             ab at debitis labore eius id nulla.`
+//     },
+//     {
+//         id: 2,
+//         name: 'Sepatu Lama',
+//         price: 5000000,
+//         image: '/images/shoes1.jpg',
+//         description: `Lorem ipsum dolor, sit amet consectetur adipisicing elit`
+//     },
     
-    {
-        id: 3,
-        name: 'Sepatu Pumi',
-        price: 2400000,
-        image: '/images/shoes1.jpg',
-        description: `Ini adalah sepatu baru dari Brand Pumi`
-    },
-]
+//     {
+//         id: 3,
+//         name: 'Sepatu Pumi',
+//         price: 2400000,
+//         image: '/images/shoes1.jpg',
+//         description: `Ini adalah sepatu baru dari Brand Pumi`
+//     },
+// ]
 
 {/* Get Email */}
 const email = localStorage.getItem('email')
@@ -39,6 +40,7 @@ function ProductsPage() {
     {/* Using useState */}
     const [cart, setCart] = useState([])
     const [totalPice, setTotalPrice] = useState(0)
+    const [products, setProducts] = useState([])
 
     {/* Using componentDidMount with useEffect */}
     useEffect(() =>{
@@ -46,11 +48,18 @@ function ProductsPage() {
         setCart(JSON.parse(localStorage.getItem('cart')) || [])
     }, [])
 
+    {/* Fetching data from API and calling the getProducts function */}
+    useEffect(() => {
+        getProducts((data) => {
+            setProducts(data)
+        })
+    }, [])
+
     {/* Using componentDidUpdate with useEffect */}
     useEffect(() => {
         /* Calculate Total Price */
         /* If cart is not empty then calulate, and store to Local Storage */
-        if (cart.length > 0) {
+        if (products.length > 0 && cart.length > 0) {
             const sum = cart.reduce((accumulator, item) => {
                 const product = products.find((product) => product.id === item.id)
                 return (
@@ -61,7 +70,7 @@ function ProductsPage() {
             /* Store Cart to Local Storage */
             localStorage.setItem('cart', JSON.stringify(cart))
         }
-    }, [cart])
+    }, [cart, products])
 
   {/* Handler Logout */}
   const handleLogout = () => {
@@ -112,10 +121,11 @@ function ProductsPage() {
         <div className='flex justify-center py-5'>
             <div className='w-4/6 flex flex-wrap'>
                 {/* Card Products using rendering map list*/}
-                {products.map(product => (
+                {products.length > 0 &&
+                 products.map(product => (
                     <CardProducts key={product.id}>
                         <CardProducts.Header image={product.image}></CardProducts.Header>
-                        <CardProducts.Body name={product.name}>
+                        <CardProducts.Body name={product.title}>
                             {product.description}
                         </CardProducts.Body>
                         <CardProducts.Footer 
@@ -128,7 +138,7 @@ function ProductsPage() {
             </div>
             <div className="w-2/6">
                 <h1 className='text-3xl font-bold text-blue-600 ml-2 mb-2'>Cart</h1>
-                {/* Create a Table */}
+                {/* Create a Table for Cart */}
                 <table className='text-left table-auto border-separate border-spacing-x-2'>
                     <thead>
                         <tr>
@@ -139,11 +149,12 @@ function ProductsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {cart.map((item) => {
+                        {products.length > 0 && 
+                        cart.map((item) => {
                             const product = products.find((product) => product.id === item.id)
                             return (
                                 <tr key={item.id}>
-                                    <td>{product.name}</td>
+                                    <td>{product.title.substring(0, 10)}...</td>
                                     <td>{product.price.toLocaleString('id-ID', 
                                         {
                                             style: 'currency', 
