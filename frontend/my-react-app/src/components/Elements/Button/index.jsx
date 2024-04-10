@@ -8,11 +8,11 @@ function Button(props) {
       onClick = () => {}, 
       type = "buttonS"
     } = props;
-    
+
     return (
       <button className={`h-10 px-10 font-semibold rounded-md ${className} text-white`}
        type={type}
-       onClick = {() => onClick()}
+       onClick = {onClick}
       >
         {children}
       </button>
