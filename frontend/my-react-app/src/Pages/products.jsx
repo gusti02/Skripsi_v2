@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import CardProducts from '../components/Fragments/CardProducts'
 import Button from '../components/Elements/Button'
 
@@ -81,6 +81,28 @@ function ProductsPage() {
     }
   }
 
+  {/* Using useRef */}
+  const cartRef = useRef(JSON.parse(localStorage.getItem('cart')) || [])
+
+  const handleAddToCartRef = (id) => {
+    cartRef.current = [...cartRef.current, { id, qty : 1 }]
+    localStorage.setItem('cart', JSON.stringify(cartRef.current))
+  }
+
+  {/* useRef to DOM the total price table row, if the cart is not empty then render 
+  the total price table row, if empty then don't render */}
+  const totalPriceRef = useRef(null)
+
+  useEffect(() => {
+    // If cart is not empty then render the total price table row, if empty then don't render
+    if (cart.length > 0) {
+        totalPriceRef.current.style.display = 'table-row'
+    } else {
+        totalPriceRef.current.style.display = 'none'
+    }
+
+  },[cart])
+
   return (
     <Fragment>
         <div className='flex justify-end h-20 bg-blue-600 text-white px-10 items-center'>
@@ -142,7 +164,8 @@ function ProductsPage() {
                                 </tr>
                             )
                         })}
-                        <tr>
+                        {/* Add Total Price Table Row */}
+                        <tr ref={totalPriceRef}>
                             <td colSpan={3}><b>Total Price</b></td>
                             <td>
                                 <b>{(totalPice).toLocaleString('id-ID', 
