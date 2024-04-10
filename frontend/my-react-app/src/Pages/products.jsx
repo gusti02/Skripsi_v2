@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import CardProducts from '../components/Fragments/CardProducts'
 import Button from '../components/Elements/Button'
 
@@ -37,12 +37,31 @@ const email = localStorage.getItem('email')
 function ProductsPage() {
     
     {/* Using useState */}
-    const [cart, setCart] = useState([
-        {
-            id: 1,
-            qty: 1,
-        },
-    ])
+    const [cart, setCart] = useState([])
+    const [totalPice, setTotalPrice] = useState(0)
+
+    {/* Using componentDidMount with useEffect */}
+    useEffect(() =>{
+        /* Get Cart from Local Storage if none then empty */
+        setCart(JSON.parse(localStorage.getItem('cart')) || [])
+    }, [])
+
+    {/* Using componentDidUpdate with useEffect */}
+    useEffect(() => {
+        /* Calculate Total Price */
+        /* If cart is not empty then calulate, and store to Local Storage */
+        if (cart.length > 0) {
+            const sum = cart.reduce((accumulator, item) => {
+                const product = products.find((product) => product.id === item.id)
+                return (
+                    accumulator + (product.price * item.qty)
+                )
+            }, 0)
+            setTotalPrice(sum)
+            /* Store Cart to Local Storage */
+            localStorage.setItem('cart', JSON.stringify(cart))
+        }
+    }, [cart])
 
   {/* Handler Logout */}
   const handleLogout = () => {
@@ -123,6 +142,19 @@ function ProductsPage() {
                                 </tr>
                             )
                         })}
+                        <tr>
+                            <td colSpan={3}><b>Total Price</b></td>
+                            <td>
+                                <b>{(totalPice).toLocaleString('id-ID', 
+                                        {
+                                            style: 'currency', 
+                                            currency: 'IDR', 
+                                            minimumFractionDigits: 0, 
+                                            maximumFractionDigits: 0 
+                                        })}
+                                </b>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 {/* Limit of Table */}
