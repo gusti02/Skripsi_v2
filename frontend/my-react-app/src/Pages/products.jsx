@@ -3,6 +3,7 @@ import CardProducts from "../components/Fragments/CardProducts";
 import Button from "../components/Elements/Button";
 import { getProducts } from "../services/product.service";
 import { getUsername } from "../services/auth.service";
+import { useLogin } from "../hooks/useLogin";
 
 // const products = [
 //     {
@@ -42,7 +43,7 @@ function ProductsPage() {
   const [cart, setCart] = useState([]);
   const [totalPice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
-  const [username, setUsername] = useState("");
+  const username = useLogin();
 
   {
     /* Using componentDidMount with useEffect */
@@ -59,22 +60,6 @@ function ProductsPage() {
     getProducts((data) => {
       setProducts(data);
     });
-  }, []);
-
-  {
-    /* Using componentDidMount with useEffect and setting username to setUsername useState.
-    If token is not exist then redirect to login */
-  }
-  useEffect(() => {
-    {
-      /* Get Token from Local Storage */
-    }
-    const token = localStorage.getItem("token");
-    if (token) {
-      setUsername(getUsername(token));
-    } else {
-      window.location.href = "/login";
-    }
   }, []);
 
   {
