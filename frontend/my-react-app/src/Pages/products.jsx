@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import CardProducts from '../components/Fragments/CardProducts'
 import Button from '../components/Elements/Button'
-import { getProducts } from '../assets/services/product.service'
+import { getProducts } from '../services/product.service'
+import { getUsername } from '../services/auth.service'
 
 // const products = [
 //     {
@@ -31,9 +32,6 @@ import { getProducts } from '../assets/services/product.service'
 //     },
 // ]
 
-{/* Get Email */}
-const email = localStorage.getItem('email')
-
 {/* Products Page */}
 function ProductsPage() {
     
@@ -41,6 +39,7 @@ function ProductsPage() {
     const [cart, setCart] = useState([])
     const [totalPice, setTotalPrice] = useState(0)
     const [products, setProducts] = useState([])
+    const [username, setUsername] = useState('')
 
     {/* Using componentDidMount with useEffect */}
     useEffect(() =>{
@@ -54,6 +53,19 @@ function ProductsPage() {
             setProducts(data)
         })
     }, [])
+
+    {/* Using componentDidMount with useEffect and setting username to setUsername useState.
+    If token is not exist then redirect to login */}
+    useEffect(() => {
+        {/* Get Token from Local Storage */}
+        const token = localStorage.getItem('token')
+        if (token) {
+            setUsername(getUsername(token))
+        } else {
+            window.location.href = "/login"
+        }
+
+      }, [])
 
     {/* Using componentDidUpdate with useEffect */}
     useEffect(() => {
@@ -72,14 +84,13 @@ function ProductsPage() {
         }
     }, [cart, products])
 
-  {/* Handler Logout */}
+  {/* Handler Logout, after click logout will redirect to login and remove token */}
   const handleLogout = () => {
-    localStorage.removeItem('email')
-    localStorage.removeItem('password')
+    localStorage.removeItem('token')
     window.location.href = "/login"
   }
 
-  {/* Handler Add To Cart */}
+  {/* Handler Add To Cart by find the id of item and add to cart */}
   const handleAddToCart = (id) => {
     if (cart.find((item) => item.id === id)) {
         setCart(
@@ -115,7 +126,7 @@ function ProductsPage() {
   return (
     <Fragment>
         <div className='flex justify-end h-20 bg-blue-600 text-white px-10 items-center'>
-            {email}
+            {username}
             <Button className='bg-black ml-5' onClick={handleLogout}>Logout</Button>
         </div>
         <div className='flex justify-center py-5'>
