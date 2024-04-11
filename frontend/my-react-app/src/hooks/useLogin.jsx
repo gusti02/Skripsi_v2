@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { getUsername } from "../services/auth.service";
 
+{
+  /* this custom hook is used to get username from token,
+  and if token is not exist then redirect to login */
+}
 export function useLogin() {
   const [username, setUsername] = useState("");
   {
