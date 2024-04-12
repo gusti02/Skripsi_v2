@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import CardProducts from "../components/Fragments/CardProducts";
 import Button from "../components/Elements/Button";
 import { getProducts } from "../services/product.service";
-import { getUsername } from "../services/auth.service";
 import { useLogin } from "../hooks/useLogin";
 
 // const products = [
@@ -143,6 +142,7 @@ function ProductsPage() {
               <CardProducts key={product.id}>
                 <CardProducts.Header
                   image={product.image}
+                  id={product.id}
                 ></CardProducts.Header>
                 <CardProducts.Body name={product.title}>
                   {product.description}
