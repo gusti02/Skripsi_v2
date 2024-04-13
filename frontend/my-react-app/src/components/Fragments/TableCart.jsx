@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import { useSelector } from "react-redux";
 import { DarkMode } from "../../context/DarkMode";
+import {
+  useTotalPrice,
+  useTotalPriceDispatch,
+} from "../../hooks/useTotalPrice";
 
 function TableCart(props) {
   const { products } = props;
   const cart = useSelector((state) => state.cart.data);
-  const [totalPrice, setTotalPrice] = useState(0);
   const { isDarkMode } = useContext(DarkMode);
+  const dispatch = useTotalPriceDispatch();
+  const { total } = useTotalPrice();
 
   {
     /* Using componentDidUpdate with useEffect */
@@ -19,7 +24,12 @@ function TableCart(props) {
         const product = products.find((product) => product.id === item.id);
         return accumulator + product.price * item.qty;
       }, 0);
-      setTotalPrice(sum);
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          total: sum,
+        },
+      });
       /* Store Cart to Local Storage */
       localStorage.setItem("cart", JSON.stringify(cart));
     }
@@ -91,7 +101,7 @@ function TableCart(props) {
           </td>
           <td>
             <b>
-              {totalPrice.toLocaleString("id-ID", {
+              {total.toLocaleString("id-ID", {
                 style: "currency",
                 currency: "IDR",
                 minimumFractionDigits: 0,
