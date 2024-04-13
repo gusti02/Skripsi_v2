@@ -1,6 +1,8 @@
 import React from "react";
 import Button from "../Elements/Button";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 
 // This is using nestes component to create card
 function CardProducts(props) {
@@ -32,7 +34,8 @@ function Body(props) {
 
 function Footer(props) {
   // This is footer of card
-  const { price, handleAddToCart, id } = props;
+  const { price, id } = props;
+  const dispatch = useDispatch();
   return (
     <div className="flex justify-between px-5 pb-3 item-center">
       <span className="text-white text-m font-bold">
@@ -43,7 +46,10 @@ function Footer(props) {
           maximumFractionDigits: 0,
         })}
       </span>
-      <Button className="bg-blue-600" onClick={() => handleAddToCart(id)}>
+      <Button
+        className="bg-blue-600"
+        onClick={() => dispatch(addToCart({ id, qty: 1 }))}
+      >
         Add To Cart
       </Button>
     </div>

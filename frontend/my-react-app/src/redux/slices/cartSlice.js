@@ -1,14 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // Createing redux slice for cart
+// to handling cart data when add to cart
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    data: [],
+    data: JSON.parse(localStorage.getItem("cart")) || [],
   },
   reducers: {
     addToCart: (state, action) => {
-      state.data.push(action.payload);
+      const itemInCart = state.data.find(
+        (item) => item.id === action.payload.id
+      );
+
+      if (itemInCart) {
+        itemInCart.qty++;
+      } else {
+        state.data.push(action.payload);
+      }
     },
   },
 });
